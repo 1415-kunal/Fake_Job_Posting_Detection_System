@@ -38,3 +38,27 @@ text = (
 
 for name, func in functions.items():
     print(f"{name}: {func(text)}")
+
+
+import pandas as pd
+from src.features.text_features import build_text_features
+
+job_text = """
+Senior AI Engineer at TechNova, Pune.
+Salary: ₹12,00,000 - ₹18,00,000 per year.
+Requires Python, Machine Learning, FastAPI and Docker.
+Full-time role requiring 3+ years of experience.
+"""
+
+features = build_text_features(job_text)
+features_df = pd.DataFrame([features])
+print("Missing feature names:")
+print(features_df.columns[features_df.isnull().any()].tolist())
+
+print("Total features:", len(features))
+print("Missing values:", features_df.isnull().sum().sum())
+print(
+    "Infinite values:",
+    features_df.select_dtypes(include="number")
+    .isin([float("inf"), float("-inf")]).sum().sum(),
+)
