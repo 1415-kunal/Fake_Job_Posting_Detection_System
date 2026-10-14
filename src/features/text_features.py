@@ -96,7 +96,8 @@ def build_text_features(job_text: str) -> dict:
 
     # Text length and section headings
     words = re.findall(r"\b\w+\b", text)
-
+    title_char_length = len(title or "")
+    description_char_length = len(text)
     sections = re.findall(
         r"(?im)^\s*(?:requirements|responsibilities|"
         r"qualifications|benefits|about us|about the company|"
@@ -105,6 +106,8 @@ def build_text_features(job_text: str) -> dict:
     )
 
     # Information-presence indicators
+    has_company_profile = int(company is not None)
+    has_salary_range = int(salary is not None)
     has_salary = int(salary is not None)
     has_experience = int(experience is not None)
     has_education = int(bool(education))
@@ -135,6 +138,8 @@ def build_text_features(job_text: str) -> dict:
         "skills": skills,
         "job_text_char_length": len(text),
         "job_text_word_count": len(words),
+        "title_char_length": title_char_length,
+        "description_char_length": description_char_length,
         "salary_min": salary_min,
         "salary_max": salary_max,
         "salary_is_range": salary_is_range,
@@ -161,6 +166,8 @@ def build_text_features(job_text: str) -> dict:
             any(term in education_text for term in ["ph.d", "phd", "doctorate"])
         ),
         "has_salary_extracted": has_salary,
+        "has_company_profile": has_company_profile,
+        "has_salary_range": has_salary_range,
         "has_experience_extracted": has_experience,
         "has_employment_type": has_employment_type,
         "has_company_extracted": has_company_extracted,
