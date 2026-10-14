@@ -12,8 +12,11 @@ from src.nlp.extractors import (
     extract_skills,
 )
 
-
-def build_text_features(job_text: str) -> dict:
+def build_text_features(
+    job_text: str,
+    title: str | None = None,
+    description: str | None = None,
+) -> dict:
     """Extract reproducible features from one complete job posting."""
 
     if not isinstance(job_text, str) or not job_text.strip():
@@ -96,8 +99,9 @@ def build_text_features(job_text: str) -> dict:
 
     # Text length and section headings
     words = re.findall(r"\b\w+\b", text)
-    title_char_length = len(title or "")
-    description_char_length = len(text)
+    title_char_length = len(title.strip()) if title else 0
+    description_text = description.strip() if description else text
+    description_char_length = len(description_text)
     sections = re.findall(
         r"(?im)^\s*(?:requirements|responsibilities|"
         r"qualifications|benefits|about us|about the company|"
