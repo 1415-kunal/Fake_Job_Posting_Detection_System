@@ -25,9 +25,42 @@ FEATURE_COLUMNS = [
     "skill_count",
     "has_python",
     "missing_important_info_count",
+    "has_suspicious_phrases",
 ]
 def main():
     df = pd.read_csv(DATA_PATH)
+    text_columns = [
+        "title",
+        "company_profile",
+        "description",
+        "requirements",
+        "benefits",
+    ]
+
+    combined_text = (
+        df[text_columns]
+        .fillna("")
+        .astype(str)
+        .agg(" ".join, axis=1)
+        .str.lower()
+    )
+
+    suspicious_phrases = [
+        "registration fee",
+        "pay a fee",
+        "upfront payment",
+        "guaranteed high salary",
+        "no interview required",
+        "send money",
+        "refundable deposit",
+        "pay to apply",
+    ]
+
+    df["has_suspicious_phrases"] = combined_text.apply(
+        lambda text: int(
+            any(phrase in text for phrase in suspicious_phrases)
+        )
+    )
 
     X = df[FEATURE_COLUMNS]
     y = df["fraudulent"]

@@ -71,6 +71,22 @@ def build_text_features(
         or bool(re.search(r"\bhybrid\b", text_lower))
     )
 
+        # Suspicious job posting indicators
+    suspicious_phrases = [
+        "registration fee",
+        "pay a fee",
+        "upfront payment",
+        "guaranteed high salary",
+        "no interview required",
+        "send money",
+        "refundable deposit",
+        "pay to apply",
+    ]
+
+    has_suspicious_phrases = int(
+        any(phrase in text_lower for phrase in suspicious_phrases)
+    )
+
     # Skill indicators
     skills_lower = {skill.lower() for skill in skills}
 
@@ -169,6 +185,7 @@ def build_text_features(
         "skill_count": len(skills),
         "has_technical_skills": has_technical_skills,
         "has_python": has_python,
+        "has_suspicious_phrases": has_suspicious_phrases,
         "has_ml_skill": has_ml_skill,
         "has_data_skill": has_data_skill,
         "is_entry_level": is_entry_level,
@@ -191,4 +208,5 @@ def build_text_features(
         "has_company_extracted": has_company_extracted,
         "missing_important_info_count": int(missing_important_info_count),
         "text_section_count": len(sections),
+        
     }
