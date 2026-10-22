@@ -119,16 +119,30 @@ def build_text_features(
     has_location = int(location is not None)
     has_company_extracted = int(company is not None)
 
-    missing_important_info_count = sum(
-        [
-            not has_salary,
-            not has_experience,
-            not has_education,
-            not has_employment_type,
-            not has_location,
-            not has_company_extracted,
-        ]
+    
+    has_requirements = int(
+        bool(re.search(r"\b(requirements|qualifications)\b", text_lower))
     )
+    has_benefits = int(
+        bool(re.search(r"\b(benefits|perks)\b", text_lower))
+    )
+    has_industry = int(
+        bool(re.search(r"\b(industry|sector)\b", text_lower))
+    )
+    has_function = int(
+        bool(re.search(r"\b(function|department)\b", text_lower))
+    )
+
+    missing_important_info_count = sum([
+        not has_salary_range,
+        not has_company_profile,
+        not has_requirements,
+        not has_benefits,
+        not has_experience,
+        not has_education,
+        not has_industry,
+        not has_function,
+    ])
 
     # Return extracted information and model features
     return {

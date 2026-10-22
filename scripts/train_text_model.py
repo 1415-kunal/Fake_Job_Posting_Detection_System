@@ -26,7 +26,6 @@ FEATURE_COLUMNS = [
     "has_python",
     "missing_important_info_count",
 ]
-
 def main():
     df = pd.read_csv(DATA_PATH)
 
